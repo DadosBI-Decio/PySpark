@@ -1,0 +1,12 @@
+# Python
+.venv/
+venv/
+
+# Logs e arquivos temporários
+*.log
+logs/
+tmp/
+
+# Segredos
+.env
+.env.*
