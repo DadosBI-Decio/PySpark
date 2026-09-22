@@ -10,3 +10,7 @@ tmp/
 # Segredos
 .env
 .env.*
+.secret
+
+# Arquivos
+config/secrets/
