@@ -1,6 +1,7 @@
 # Python
 .venv/
 venv/
+__pycache__/
 
 # Logs e arquivos temporários
 *.log
@@ -10,8 +11,9 @@ tmp/
 # Segredos
 .env
 .env.*
+*.env
 .secret
 
 # Arquivos
 config/secrets/
-config/connections
+config/connections/
