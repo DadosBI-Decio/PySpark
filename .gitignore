@@ -14,3 +14,4 @@ tmp/
 
 # Arquivos
 config/secrets/
+config/connections
