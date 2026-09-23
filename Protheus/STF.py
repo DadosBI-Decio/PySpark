@@ -1,3 +1,4 @@
+
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import spark_partition_id, count
 from pyspark.sql import functions as F
@@ -52,7 +53,7 @@ SQL_SERVER_PASSWORD = SQLSERVER_CONFIG["password"]
 # CONFIGURAÇÕES DO JOB
 # =========================================================
 
-TARGET_TABLE = "source.STF"
+TARGET_TABLE = "raw.SFT"
 
 NUM_PARTITIONS = 12
 
@@ -323,11 +324,8 @@ inicio = time.time()
 spark = (
     SparkSession.builder
     .appName(TARGET_TABLE)
-    .master("spark://spark-master:9090")
-    .config(
-        "spark.jars",
-        "/opt/spark/jars/postgresql-42.7.6.jar"
-    )
+    .master("spark://192.168.100.104:7077")
+    .config("spark.jars", "/opt/spark/jars/postgresql-42.7.3.jar")
     .config("spark.default.parallelism", "12")
     .config("spark.sql.shuffle.partitions", "12")
     .config("spark.sql.adaptive.enabled", "true")
@@ -421,7 +419,7 @@ df = (
         "driver",
         "com.microsoft.sqlserver.jdbc.SQLServerDriver"
     )
-    .option("partitionColumn", "chave")
+    .option("partitionColumn", "R_E_C_N_O_")
     .option("lowerBound", menor)
     .option("upperBound", maior)
     .option("numPartitions", NUM_PARTITIONS)
@@ -442,9 +440,10 @@ print("Reparticionando DataFrame...")
 
 inicio = time.time()
 
-df = df.repartition(NUM_PARTITIONS)
+#df = df.repartition(12)
 
-print(f"Partições Spark: {df.rdd.getNumPartitions()}")
+print("Partições após JDBC:", df.rdd.getNumPartitions())
+
 
 print(
     f"Tempo repartition: "
@@ -471,7 +470,7 @@ inicio = time.time()
     .option("user", POSTGRES_USER)
     .option("password", POSTGRES_PASSWORD)
     .option("driver", "org.postgresql.Driver")
-    .option("batchsize", 10000)
+    .option("batchsize", 20000)
     .mode("overwrite")
     .save()
 )
